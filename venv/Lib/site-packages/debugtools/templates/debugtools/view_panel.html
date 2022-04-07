@@ -1,0 +1,51 @@
+{% load i18n %}
+<style type="text/css">
+  #djDebug .view_panel code {
+    display: inline;
+  }
+
+  #djDebug .view_panel strong {
+    font-weight: bold;
+  }
+</style>
+<table class="view_panel">
+    <thead>
+        <tr>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Value" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="djDebugOdd">
+            <th>{% trans "View" %}</th>
+            <td><code>{{ view_module }}.{{ view_name }}</code></td>
+        </tr>
+        <tr class="djDebugEven">
+            <th>{% trans "Template" %}</th>
+            <td><code>{{ template }}</code></td>
+        </tr>
+        <tr class="djDebugOdd">
+            <th>{% trans "Template choices" %}</th>
+            <td>{% for choice in template_choices %}
+                {% if choice == template %}<strong>{% endif %}<code style="display: inline;">{{ choice }}</code>{% if choice == template %}</strong>{% endif %}</code>{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                  -
+                {% endfor %}
+            </td>
+        </tr>
+        <tr class="djDebugEven">
+            <th>{% trans "Form" %}</th>
+            <td>{% if view_data.form %}<code>{{ view_data.form }}</code>{% else %}-{% endif %}</td>
+        </tr>
+        <tr class="djDebugOdd">
+            <th>{% trans "Model" %}</th>
+            <td>{% if view_data.model %}<code>{{ view_data.model }}</code>{% else %}-{% endif %}</td>
+        </tr>
+        <tr class="djDebugEven">
+            <th>{% trans "Context" %}</th>
+            <td>{% if view_data %}{% for key, path in view_data.template_context %}
+                <strong><code>{{ key }}</code>:</strong> <code>{{ path }}</code><br/>
+            {% empty %}-{% endfor %}{% else %}- <small>(needs <kbd>TemplateResponse</kbd>)</small>{% endif %}</td>
+        </tr>
+    </tbody>
+</table>
