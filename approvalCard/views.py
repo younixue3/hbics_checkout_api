@@ -8,3 +8,4 @@ class CardsViewSet(viewsets.ModelViewSet):
     queryset = cards.objects.all()
     serializer_class = CardsSerializer
     permission_classes = [per.IsAuthenticated]
+
