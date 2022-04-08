@@ -1,41 +1,29 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
-from approvalCard.models import cards, permissions, authUserCard, authUserDivision, authDivision
+from approvalCard.models import cards, permissions
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['url', 'username', 'email', 'groups']
+        pagination_class = None
 
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ['url', 'name']
 
-class CardsSerializer(serializers.HyperlinkedModelSerializer):
+class CardsSerializer(serializers.ModelSerializer):
     class Meta:
         model = cards
-        fields = ['id', 'permission_uuid']
+        fields = ['url', 'id', 'user_uuid_id']
+        pagination_class = None
 
-class PermissionsSerializer(serializers.HyperlinkedModelSerializer):
+class PermissionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = permissions
-        field = ['id', 'description', 'created_at', 'updated_at', 'deleted_at']
-
-class AuthUserCardSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = authUserCard
-        field = ['id', 'card_uuid', 'user_uuid']
-
-class AuthUserDivisionSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = authUserDivision
-        field = ['id', 'user_uuid', 'division_uuid', 'created_at', 'updated_at', 'deleted_at']
-
-class AuthDivisionSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = authDivision
-        field = ['id', 'name']
+        fields = ['url', 'description', 'status', 'created_at', 'updated_at', 'deleted_at']
+        pagination_class = None
