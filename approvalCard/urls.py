@@ -1,7 +1,7 @@
 from django.urls import path, include
 
-from . import views
+from .views import ListApproval
 
 urlpatterns = [
-    path('cards/', views.aprrovalList),
+    path('cards/', ListApproval.as_view()),
 ]
