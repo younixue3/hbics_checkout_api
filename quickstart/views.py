@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User, Group, auth
-from rest_framework import viewsets
-from rest_framework import permissions
+from rest_framework import viewsets, permissions, authentication, renderers, views, exceptions, pagination, generics
 from quickstart.serializers import UserSerializer, GroupSerializer
 
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -15,8 +14,7 @@ class CustomAuthToken(ObtainAuthToken):
         password = request.data['password']
 
         user = User.objects.filter(username=username).first()
-        # groupes = user.groups.first()
-
+        groups = user.groups.first()
         if user is None:
             raise exceptions.AuthenticationFailed('User Not Found')
 
@@ -26,8 +24,8 @@ class CustomAuthToken(ObtainAuthToken):
         token, created = Token.objects.get_or_create(user=user)
         return Response({
             'token': token.key,
-            'user_id': user.pk
-            # 'level': groupes,
+            'user_id': user.pk,
+            'group': str(groups)
         })
 
 
