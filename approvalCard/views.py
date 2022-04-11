@@ -11,6 +11,7 @@ class CardsViewSet(viewsets.ModelViewSet):
     serializer_class = CardsSerializer
     permission_classes = [per.IsAuthenticated]
 
+<<<<<<< HEAD
 class PermissionViewSet(viewsets.ModelViewSet):
     queryset = permissions.objects.all()
     serializer_class = PermissionsSerializer
@@ -22,3 +23,5 @@ def aprrovalList(request):
         card = cards.objects.all()
         serializer = CardsSerializer(card, many=True)
         return Response(serializer.data)
+=======
+>>>>>>> f66a5280a7ebbaec5eda0904d2a9e35a638ed6fe
