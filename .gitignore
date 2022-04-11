@@ -1,3 +1,4 @@
 approvalCard/__init__.py
+approvalCard/migrations
 quickstart/__init__.py
 rest_api_hbics_checkout/__init__.py
