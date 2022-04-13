@@ -14,7 +14,8 @@ class CustomAuthToken(ObtainAuthToken):
         password = request.data['password']
 
         user = User.objects.filter(username=username).first()
-        groups = user.groups.first()
+        group = user.groups.all()
+        groupserializer = GroupSerializer(group, many=True)
         if user is None:
             raise exceptions.AuthenticationFailed('User Not Found')
 
@@ -25,7 +26,8 @@ class CustomAuthToken(ObtainAuthToken):
         return Response({
             'token': token.key,
             'user_id': user.pk,
-            'group': str(groups)
+            'group': groupserializer.data,
+            'superuser': user.is_superuser
         })
 
 

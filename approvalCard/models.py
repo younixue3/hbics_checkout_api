@@ -23,6 +23,11 @@ class permissions(models.Model):
         choices=STATUS_CHOICES,
         default=NOT_YET
     )
+    appoval_by = models.ForeignKey(
+        User,
+        on_delete=models.DO_NOTHING,
+        blank=True, null=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(blank=True, null=True)
@@ -32,5 +37,5 @@ class cards(models.Model):
     permission_uuid = models.ManyToManyField(permissions, blank=True, null=True)
     user_uuid = models.ForeignKey(
         User,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.DO_NOTHING
     )

@@ -14,18 +14,19 @@ class UserSerializer(serializers.ModelSerializer):
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ['url', 'name']
+        fields = '__all__'
+        pagination_class = None
 
 class CardsSerializer(serializers.ModelSerializer):
     class Meta:
         model = cards
-        fields = ['url', 'id', 'permission_uuid', 'user_uuid_id']
+        fields = '__all__'
         pagination_class = None
 
 class PermissionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = permissions
-        fields = ['url', 'description', 'status', 'created_at', 'updated_at', 'deleted_at']
+        fields = '__all__'
         pagination_class = None
 
 class CardsListSerializer(serializers.ModelSerializer):
