@@ -9,7 +9,7 @@ from django.contrib.auth.models import User, Group, auth
 from .models import cards, permissions
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.renderers import JSONRenderer
-from quickstart.serializers import CardsSerializer, PermissionsSerializer, CardsListSerializer
+from quickstart.serializers import CardsSerializer, PermissionsSerializer, CardsListSerializer, UserSerializer
 from django.db.models import Q
 
 class CardsViewSet(viewsets.ModelViewSet):
@@ -48,8 +48,15 @@ def aprrovalListForm(request):
 def aprrovalSearch(request):
     if request.method == 'POST':
         groupdata = Group.objects.get(name=request.data['group'][1]['name'])
-        user_id = User.objects.filter(Q(groups__name__in=[groupdata]) and Q(groups__name__in=['Staff']))
-        card = cards.objects.filter(Q(user_uuid__groups__name__in=[groupdata]) and Q(user_uuid__groups__name__in=['Staff'])).all()
+        if request.data['search'] == None:
+            card = cards.objects.filter(
+                Q(user_uuid__groups__name__in=[groupdata]) and Q(user_uuid__groups__name__in=['Staff']))
+        else:
+            card = cards.objects.filter(
+                Q(user_uuid__groups__name__in=[groupdata]) and Q(user_uuid__groups__name__in=['Staff']) and Q(
+                    user_uuid__first_name__contains=request.data['search']) or Q(
+                    user_uuid__last_name__contains=request.data['search']))
+
         serializer = CardsSerializer(card, many=True)
         return Response(serializer.data)
 
@@ -59,11 +66,13 @@ def aprrovalSearch(request):
 @api_view(['POST'])
 def aprrovalSearchStatus(request, uuid):
     if request.method == 'POST':
-        print(uuid)
-        permissiondata = permissions.objects.get(id=uuid)
-        print(permissiondata)
-        serializer = PermissionsSerializer(permissiondata)
-        return Response(serializer.data)
+        permissiondata = permissions.objects.filter(id=uuid).last()
+        print(permissiondata.status)
+        user_id = User.objects.get(id=request.data['user'])
+        serializer_permission = PermissionsSerializer(permissiondata)
+        serializer_user = UserSerializer(user_id)
+        context = {'permission': serializer_permission.data, 'user': serializer_user.data}
+        return Response(context)
 
         # print(request.data['group'])
         # for i in request.data['group']:
@@ -94,15 +103,16 @@ def permissionPost(request):
         user_id = User.objects.get(username=token_user).id
         card = cards.objects.get(user_uuid_id__id=user_id)
         # print(card.permission_uuid.first())
+        print(card.permission_uuid.first() == None)
         if card.permission_uuid.first() == None:
             serializer_permission = PermissionsSerializer(data=request.data)
             if serializer_permission.is_valid():
                 permission_id = serializer_permission.save().id
                 card.permission_uuid.add(permission_id)
-                context = {'error': True, 'massage': 'Izin terakhir anda masih di proses'}
+                context = {'success': True, 'massage': 'Izin anda berhasil di input'}
                 return Response(context)
         else:
-            if card.permission_uuid.last().status == 'NO':
+            if card.permission_uuid.first().status == 'NO':
                 context = {'error': True, 'massage': 'Izin terakhir anda masih di proses'}
                 return Response(context)
             else:
@@ -110,9 +120,25 @@ def permissionPost(request):
                 if serializer_permission.is_valid():
                     permission_id = serializer_permission.save().id
                     card.permission_uuid.add(permission_id)
-                    context = {'error': True, 'massage': 'Izin terakhir anda masih di proses'}
+                    context = {'success': True, 'massage': 'Izin anda berhasil di input'}
                     return Response(context)
         # print(serializer_permission.save())
+
+@api_view(['POST'])
+def searchDetailStaff(request, id):
+    if request.method == 'POST':
+        card = cards.objects.get(user_uuid_id__id=id)
+        permissionrecent = card.permission_uuid.order_by('-created_at')[1:]
+        serializer = PermissionsSerializer(permissionrecent, many=True)
+        return Response(serializer.data)
+
+@api_view(['POST'])
+def searchLastDetailStaff(request, id):
+    if request.method == 'POST':
+        card = cards.objects.get(user_uuid_id__id=id)
+        permissionrecent = card.permission_uuid.order_by('-created_at')[0:1]
+        serializer = PermissionsSerializer(permissionrecent, many=True)
+        return Response(serializer.data)
 
 #####################################
 #### MULTIPLE OUTPUT SERIALIZERS ####

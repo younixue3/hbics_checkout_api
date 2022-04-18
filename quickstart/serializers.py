@@ -7,7 +7,7 @@ from approvalCard.models import cards, permissions
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'groups']
+        fields = '__all__'
         pagination_class = None
 
 
