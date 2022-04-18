@@ -140,6 +140,24 @@ def searchLastDetailStaff(request, id):
         serializer = PermissionsSerializer(permissionrecent, many=True)
         return Response(serializer.data)
 
+@api_view(['PUT'])
+def approvalPost(request, uuid):
+    if request.method == 'PUT':
+        permissiondata = permissions.objects.get(id=uuid)
+        permissiondata.status = request.data['status']
+        permissiondata.save()
+        PermissionsSerializer(permissiondata)
+        context = {'success': True, 'massage': 'Izin anda berhasil di input'}
+        return Response(context)
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     context = {'success': True, 'massage': 'Izin anda berhasil di input'}
+        #     return Response(context)
+        # else:
+        #     context = {'error': True, 'massage': 'Data Gagal di proses'}
+        #     return Response(context)
+
+
 #####################################
 #### MULTIPLE OUTPUT SERIALIZERS ####
 #####################################

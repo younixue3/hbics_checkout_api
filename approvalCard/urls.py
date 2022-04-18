@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from .views import aprrovalList, aprrovalRecent, aprrovalSearch, aprrovalSearchStatus, aprrovalListForm, permissionPost, searchDetailStaff, searchLastDetailStaff
+from .views import aprrovalList, aprrovalRecent, aprrovalSearch, aprrovalSearchStatus, aprrovalListForm, permissionPost, searchDetailStaff, searchLastDetailStaff, approvalPost
 
 urlpatterns = [
     path('permissions/', aprrovalList),
@@ -10,5 +10,6 @@ urlpatterns = [
     path('permissions_form/', aprrovalListForm),
     path('permission/apply', permissionPost),
     path('search_detail_staff/<int:id>', searchDetailStaff),
-    path('search_last_detail_staff/<int:id>', searchLastDetailStaff)
+    path('search_last_detail_staff/<int:id>', searchLastDetailStaff),
+    path('approval_post/<str:uuid>', approvalPost)
 ]

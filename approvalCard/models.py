@@ -34,7 +34,7 @@ class permissions(models.Model):
 
 class cards(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    permission_uuid = models.ManyToManyField(permissions, blank=True, null=True, )
+    permission_uuid = models.ManyToManyField(permissions, blank=True, null=True)
     user_uuid = models.ForeignKey(
         User,
         on_delete=models.DO_NOTHING
