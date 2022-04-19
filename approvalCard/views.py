@@ -43,6 +43,13 @@ def aprrovalListForm(request):
         serializer = PermissionsSerializer(permissionlist, many=True)
         return Response(serializer.data)
 
+@api_view(['POST'])
+def getLeader(request):
+    if request.method == 'POST':
+        user = User.objects.get(pk=request.data['leader'])
+        context = {'leader': user.first_name}
+        print(context)
+        return Response(context)
 
 @api_view(['POST'])
 def aprrovalSearch(request):
@@ -67,7 +74,6 @@ def aprrovalSearch(request):
 def aprrovalSearchStatus(request, uuid):
     if request.method == 'POST':
         permissiondata = permissions.objects.filter(id=uuid).last()
-        print(permissiondata.status)
         user_id = User.objects.get(id=request.data['user'])
         serializer_permission = PermissionsSerializer(permissiondata)
         serializer_user = UserSerializer(user_id)
@@ -93,8 +99,10 @@ def aprrovalRecent(request):
         user_id = User.objects.get(username=token_user).id
         card = cards.objects.get(user_uuid_id__id=user_id)
         permissionrecent = card.permission_uuid.order_by('-created_at')[0:1]
+        print(permissionrecent.first().appoval_by.username)
         serializer = PermissionsSerializer(permissionrecent, many=True)
-        return Response(serializer.data)
+        context = {'data': serializer.data, 'leader': permissionrecent.first().appoval_by.username}
+        return Response(context)
 
 @api_view(['POST'])
 def permissionPost(request):
@@ -144,7 +152,10 @@ def searchLastDetailStaff(request, id):
 def approvalPost(request, uuid):
     if request.method == 'PUT':
         permissiondata = permissions.objects.get(id=uuid)
+        token_user = Token.objects.get(key=request.data['token']).user
+        user_id = User.objects.get(username=token_user).id
         permissiondata.status = request.data['status']
+        permissiondata.appoval_by_id = user_id
         permissiondata.save()
         PermissionsSerializer(permissiondata)
         context = {'success': True, 'massage': 'Izin anda berhasil di input'}

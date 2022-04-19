@@ -26,6 +26,7 @@ class CustomAuthToken(ObtainAuthToken):
         return Response({
             'token': token.key,
             'user_id': user.pk,
+            'name': user.first_name + ' ' +user.last_name,
             'group': groupserializer.data,
             'superuser': user.is_superuser
         })
