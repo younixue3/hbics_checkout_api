@@ -99,9 +99,13 @@ def aprrovalRecent(request):
         user_id = User.objects.get(username=token_user).id
         card = cards.objects.get(user_uuid_id__id=user_id)
         permissionrecent = card.permission_uuid.order_by('-created_at')[0:1]
-        print(permissionrecent.first().appoval_by.username)
+        print(permissionrecent.first().appoval_by)
+        if permissionrecent.first().appoval_by == None:
+            leadername = ''
+        else:
+            leadername = permissionrecent.first().appoval_by.username
         serializer = PermissionsSerializer(permissionrecent, many=True)
-        context = {'data': serializer.data, 'leader': permissionrecent.first().appoval_by.username}
+        context = {'data': serializer.data, 'leader': leadername}
         return Response(context)
 
 @api_view(['POST'])
