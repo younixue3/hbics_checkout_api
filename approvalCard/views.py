@@ -170,7 +170,7 @@ def approvalPost(request, uuid):
         #     return Response(context)
 
 @api_view(['PUT'])
-def permissionCheck(request, uuid):
+def permissionCheckIn(request, uuid):
     print(uuid)
     permissiondata = permissions.objects.get(id=uuid)
     if permissiondata.status == 'NO':
@@ -186,6 +186,20 @@ def permissionCheck(request, uuid):
         permissiondata.save()
         print('boleh keluar')
         context = {'type': 'success', 'massage': 'Selamat Jalan, Hati-hati di jalan yah <3'}
+        return Response(context)
+
+@api_view(['PUT'])
+def permissionCheckOut(request, uuid):
+    print(uuid)
+    permissiondata = permissions.objects.get(id=uuid)
+    if permissiondata.status == 'OU':
+        permissiondata.status = 'DN'
+        permissiondata.save()
+        print('boleh keluar')
+        context = {'type': 'success', 'massage': 'Selamat Datang, Kami merindukanmu :3'}
+        return Response(context)
+    else:
+        context = {'type': 'error', 'massage': 'Anda Kan tidak keluar'}
         return Response(context)
 #####################################
 #### MULTIPLE OUTPUT SERIALIZERS ####
