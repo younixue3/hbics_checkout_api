@@ -169,7 +169,20 @@ def approvalPost(request, uuid):
         #     context = {'error': True, 'massage': 'Data Gagal di proses'}
         #     return Response(context)
 
-
+@api_view(['PUT'])
+def permissionCheck(request, uuid):
+    print(uuid)
+    permissiondata = permissions.objects.get(id=uuid)
+    if permissiondata.status == 'NO':
+        print('gak boleh keluar')
+        context = {'error': False, 'massage': 'Izin Anda belum di proses'}
+        return Response(context)
+    else:
+        permissiondata.status = 'OU'
+        permissiondata.save()
+        print('boleh keluar')
+        context = {'success': True, 'massage': 'Selamat Jalan, Hati-hati di jalan yah <3'}
+        return Response(context)
 #####################################
 #### MULTIPLE OUTPUT SERIALIZERS ####
 #####################################
