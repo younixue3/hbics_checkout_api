@@ -114,8 +114,6 @@ def permissionPost(request):
         token_user = Token.objects.get(key=request.data['token']).user
         user_id = User.objects.get(username=token_user).id
         card = cards.objects.get(user_uuid_id__id=user_id)
-        # print(card.permission_uuid.first())
-        print(card.permission_uuid.first() == None)
         if card.permission_uuid.first() == None:
             serializer_permission = PermissionsSerializer(data=request.data)
             if serializer_permission.is_valid():
