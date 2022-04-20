@@ -175,13 +175,17 @@ def permissionCheck(request, uuid):
     permissiondata = permissions.objects.get(id=uuid)
     if permissiondata.status == 'NO':
         print('gak boleh keluar')
-        context = {'error': False, 'massage': 'Izin Anda belum di proses'}
+        context = {'type': 'warning', 'massage': 'Izin Anda belum di proses'}
         return Response(context)
-    else:
+    elif permissiondata.status == 'RJ':
+        print('gak boleh keluar')
+        context = {'type': 'error', 'massage': 'Izin Anda ditolak'}
+        return Response(context)
+    elif permissiondata.status == 'AC':
         permissiondata.status = 'OU'
         permissiondata.save()
         print('boleh keluar')
-        context = {'success': True, 'massage': 'Selamat Jalan, Hati-hati di jalan yah <3'}
+        context = {'type': 'success', 'massage': 'Selamat Jalan, Hati-hati di jalan yah <3'}
         return Response(context)
 #####################################
 #### MULTIPLE OUTPUT SERIALIZERS ####
