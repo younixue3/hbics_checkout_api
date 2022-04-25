@@ -9,7 +9,7 @@ from django.contrib.auth.models import User, Group, auth
 from .models import cards, permissions
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.renderers import JSONRenderer
-from quickstart.serializers import CardsSerializer, PermissionsSerializer, CardsListSerializer, UserSerializer
+from quickstart.serializers import CardsSerializer, PermissionsSerializer, CardsListSerializer, UserSerializer, StaffSerializer
 from django.db.models import Q
 
 class CardsViewSet(viewsets.ModelViewSet):
@@ -201,6 +201,23 @@ def permissionCheckOut(request, uuid):
     else:
         context = {'type': 'error', 'massage': 'Anda Kan tidak keluar'}
         return Response(context)
+
+class userCreate(viewsets.generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = StaffSerializer
+
+# @api_view(['POST'])
+# def createUser(request, uuid):
+#     print(uuid)
+#     if request.method == 'POST':
+#         serializer_permission = UserSerializer(data=request.data)
+#         if serializer_permission.is_valid():
+#             permission_id = serializer_permission.save().id
+#             card.permission_uuid.add(permission_id)
+#             context = {'success': True, 'massage': 'Izin anda berhasil di input'}
+#             return Response(context)
+#     if request.method == 'PUT':
+
 #####################################
 #### MULTIPLE OUTPUT SERIALIZERS ####
 #####################################
