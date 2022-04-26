@@ -11,5 +11,6 @@ from quickstart import views
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('quickstart.urls'))
+    path('api/', include('quickstart.urls')),
+    path('.well-known/pki-validation/8113BEB5C512C4DF99813AC3DBC03CF3.txt', views.security_txt)
 ]

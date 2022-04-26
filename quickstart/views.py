@@ -6,6 +6,9 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
+from django.http import HttpResponse
+from django.views.decorators.http import require_GET
+
 
 class CustomAuthToken(ObtainAuthToken):
 
@@ -49,3 +52,12 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+@require_GET
+def security_txt(request):
+    lines = [
+        "452E8E045E7EE62499E2AD5E83B62713A17B2AB2CCEA63549BDF3FB0F6DF1596",
+        "comodoca.com",
+        "5d8070116cac567"
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
