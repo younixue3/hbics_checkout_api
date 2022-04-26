@@ -11,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.renderers import JSONRenderer
 from quickstart.serializers import CardsSerializer, PermissionsSerializer, CardsListSerializer, UserSerializer, StaffSerializer
 from django.db.models import Q
+from django.shortcuts import render, redirect
 
 class CardsViewSet(viewsets.ModelViewSet):
     queryset = cards.objects.all()
@@ -205,6 +206,9 @@ def permissionCheckOut(request, uuid):
 class userCreate(viewsets.generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = StaffSerializer
+
+def formUser(request):
+    return render(request, 'formUser/formUser.html')
 
 # @api_view(['POST'])
 # def createUser(request, uuid):

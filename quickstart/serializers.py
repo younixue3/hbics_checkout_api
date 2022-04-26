@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
+from django.shortcuts import redirect
+
 from approvalCard.models import cards, permissions
 
 
@@ -23,7 +25,7 @@ class StaffSerializer(serializers.ModelSerializer):
         user.save()
         cardinser = cards(user_uuid_id=user.id)
         cardinser.save()
-        return user
+        return redirect('/admin/auth/user')
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
