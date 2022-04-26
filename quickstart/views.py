@@ -56,8 +56,8 @@ class GroupViewSet(viewsets.ModelViewSet):
 @require_GET
 def security_txt(request):
     lines = [
-        "452E8E045E7EE62499E2AD5E83B62713A17B2AB2CCEA63549BDF3FB0F6DF1596",
+        "68E81249B074B3ADAB6F9D685F1B78364B2EA4D50109CA1FE5E46C43FD2D344D",
         "comodoca.com",
-        "5d8070116cac567"
+        "9b74ecfb7f969a0"
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")

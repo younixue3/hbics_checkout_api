@@ -12,5 +12,5 @@ from quickstart import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('quickstart.urls')),
-    path('.well-known/pki-validation/8113BEB5C512C4DF99813AC3DBC03CF3.txt', views.security_txt)
+    path('.well-known/pki-validation/BCBF73E9CBC31B88553006273C32FE3E.txt', views.security_txt)
 ]
