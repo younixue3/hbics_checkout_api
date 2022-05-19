@@ -39,3 +39,13 @@ class cards(models.Model):
         User,
         on_delete=models.DO_NOTHING
     )
+
+class profile_pic(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    namefile = models.TextField()
+    user_uuid = models.ForeignKey(
+        User,
+        on_delete=models.DO_NOTHING
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    deleted_at = models.DateTimeField(blank=True, null=True)

@@ -12,6 +12,7 @@ from rest_framework.renderers import JSONRenderer
 from quickstart.serializers import CardsSerializer, PermissionsSerializer, CardsListSerializer, UserSerializer, StaffSerializer
 from django.db.models import Q
 from django.shortcuts import render, redirect
+from approvalCard.forms import StaffForm
 
 class CardsViewSet(viewsets.ModelViewSet):
     queryset = cards.objects.all()
@@ -210,17 +211,24 @@ class userCreate(viewsets.generics.CreateAPIView):
 def formUser(request):
     return render(request, 'formUser/formUser.html')
 
-# @api_view(['POST'])
-# def createUser(request, uuid):
-#     print(uuid)
-#     if request.method == 'POST':
-#         serializer_permission = UserSerializer(data=request.data)
-#         if serializer_permission.is_valid():
-#             permission_id = serializer_permission.save().id
-#             card.permission_uuid.add(permission_id)
-#             context = {'success': True, 'massage': 'Izin anda berhasil di input'}
-#             return Response(context)
-#     if request.method == 'PUT':
+@api_view(['POST'])
+def createUser(request):
+    print(request.data)
+    if request.method == 'POST':
+        user = User.objects.create_user(request.data['username'], request.data['email'], request.data['password'], )
+        print(user.id)
+        serializer_card = CardsSerializer(data=request.data)
+        if serializer_permission.is_valid():
+            permission_id = serializer_permission.save().id
+            card.permission_uuid.add(permission_id)
+            context = {'success': True, 'massage': 'User berhasil dibuat'}
+            return Response(context)
+    elif request.method == 'PUT':
+        return request.method
+    elif request.method == 'GET':
+        form = StaffForm()
+        return render('index.html', {'form':form})
+    
 
 #####################################
 #### MULTIPLE OUTPUT SERIALIZERS ####
