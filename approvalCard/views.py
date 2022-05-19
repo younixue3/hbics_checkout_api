@@ -211,23 +211,22 @@ class userCreate(viewsets.generics.CreateAPIView):
 def formUser(request):
     return render(request, 'formUser/formUser.html')
 
-@api_view(['POST'])
 def createUser(request):
     print(request.data)
-    if request.method == 'POST':
-        user = User.objects.create_user(request.data['username'], request.data['email'], request.data['password'], )
-        print(user.id)
-        serializer_card = CardsSerializer(data=request.data)
-        if serializer_permission.is_valid():
-            permission_id = serializer_permission.save().id
-            card.permission_uuid.add(permission_id)
-            context = {'success': True, 'massage': 'User berhasil dibuat'}
-            return Response(context)
-    elif request.method == 'PUT':
-        return request.method
+    if request.method == 'POST' or request.method == 'PUT':
+        if (User.objects.get(username=request.data['username']).exist()):
+            user = User.objects.update_or_create(request.data['username'], request.data['email'], request.data['password'], )
+            print(user.id)
+        else:
+            user = User.objects.update_or_create(request.data['username'], request.data['email'], request.data['password'], )
+            print(user.id)
+            card = cards.objects.create(user_uuid=user.id)
     elif request.method == 'GET':
         form = StaffForm()
-        return render('index.html', {'form':form})
+        compact = {
+            'form': form
+        }
+        return render('index.html', compact)
     
 
 #####################################
