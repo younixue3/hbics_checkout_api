@@ -18,7 +18,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class CardsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = cards
-        fields = ['id', 'permission_uuid']
+        fields = ['id']
 
 class PermissionsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

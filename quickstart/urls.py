@@ -5,15 +5,15 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 from . import views
 from .views import CustomAuthToken
-from approvalCard.views import CardsViewSet
+from approvalCard.views import card_list
 
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
-router.register(r'cards', CardsViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
     path('auth', CustomAuthToken.as_view()),
+    path('cards/', card_list)
 ]
