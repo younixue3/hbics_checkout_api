@@ -1,41 +1,56 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
-from approvalCard.models import cards, permissions, authUserCard, authUserDivision, authDivision
+from django.shortcuts import redirect
+
+from approvalCard.models import cards, permissions
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'groups']
+        fields = '__all__'
+        pagination_class = None
 
+class StaffSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+        extra_kwargs = {'password': {'write_only': True}}
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        cardinser = cards(user_uuid_id=user.id)
+        cardinser.save()
+        return redirect('/admin/auth/user')
+
+class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ['url', 'name']
+        fields = '__all__'
+        pagination_class = None
 
-class CardsSerializer(serializers.HyperlinkedModelSerializer):
+class CardsSerializer(serializers.ModelSerializer):
     class Meta:
         model = cards
+<<<<<<< HEAD
         fields = ['id']
+=======
+        fields = '__all__'
+        pagination_class = None
+>>>>>>> 46d1768ff0598756f664c4a0b6c67075df11f79b
 
-class PermissionsSerializer(serializers.HyperlinkedModelSerializer):
+class PermissionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = permissions
-        field = ['id', 'description', 'created_at', 'updated_at', 'deleted_at']
+        fields = '__all__'
+        pagination_class = None
 
-class AuthUserCardSerializer(serializers.HyperlinkedModelSerializer):
+class CardsListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = authUserCard
-        field = ['id', 'card_uuid', 'user_uuid']
-
-class AuthUserDivisionSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = authUserDivision
-        field = ['id', 'user_uuid', 'division_uuid', 'created_at', 'updated_at', 'deleted_at']
-
-class AuthDivisionSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = authDivision
-        field = ['id', 'name']
+        model = cards
+        fields = '__all__'
+        pagination_class = None
