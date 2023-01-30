@@ -8,6 +8,9 @@ from .views import CustomAuthToken
 from approvalCard.views import card_list
 from approvalCard.views import CardsViewSet, PermissionViewSet
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)

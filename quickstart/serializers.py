@@ -36,12 +36,8 @@ class GroupSerializer(serializers.ModelSerializer):
 class CardsSerializer(serializers.ModelSerializer):
     class Meta:
         model = cards
-<<<<<<< HEAD
-        fields = ['id']
-=======
         fields = '__all__'
         pagination_class = None
->>>>>>> 46d1768ff0598756f664c4a0b6c67075df11f79b
 
 class PermissionsSerializer(serializers.ModelSerializer):
     class Meta:

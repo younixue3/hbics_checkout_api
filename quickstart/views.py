@@ -14,23 +14,22 @@ class CustomAuthToken(ObtainAuthToken):
 
     def post(self, request, *args, **kwargs):
         username = request.data['username']
-        password = request.data['password']
 
-        user = User.objects.filter(username=username).first()
-        group = user.groups.all()
-        groupserializer = GroupSerializer(group, many=True)
+        user = User.objects.get(username=username)
+        if not user:
+            User.objects.create(username=username)
+        user = User.objects.get(username=username)
+        # group = user.groups.all()
+        # groupserializer = GroupSerializer(group, many=True)
         if user is None:
             raise exceptions.AuthenticationFailed('User Not Found')
-
-        if not user.check_password(password):
-            raise exceptions.AuthenticationFailed('Incorrect Password')
 
         token, created = Token.objects.get_or_create(user=user)
         return Response({
             'token': token.key,
             'user_id': user.pk,
             'name': user.first_name + ' ' +user.last_name,
-            'group': groupserializer.data,
+            # 'group': groupserializer.data,
             'superuser': user.is_superuser
         })
 

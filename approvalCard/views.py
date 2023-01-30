@@ -1,13 +1,8 @@
 from django.shortcuts import render
-<<<<<<< HEAD
-from rest_framework import viewsets, response, status
-from rest_framework.decorators import api_view
-=======
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
->>>>>>> 46d1768ff0598756f664c4a0b6c67075df11f79b
 from rest_framework import permissions as per
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User, Group, auth
@@ -19,12 +14,11 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from approvalCard.forms import StaffForm
 
-# class CardsViewSet(viewsets.ModelViewSet):
-#     queryset = cards.objects.all()
-#     serializer_class = CardsSerializer
-#     permission_classes = [per.IsAuthenticated]
+class CardsViewSet(viewsets.ModelViewSet):
+    queryset = cards.objects.all()
+    serializer_class = CardsSerializer
+    permission_classes = [per.IsAuthenticated]
 
-<<<<<<< HEAD
 def card_list(request):
     """
     List all code snippets, or create a new snippet.
@@ -33,7 +27,6 @@ def card_list(request):
         snippets = cards.objects.all()
         serializer = CardsSerializer(snippets, many=True)
         return response.Response(serializer.data)
-=======
 class PermissionViewSet(viewsets.ModelViewSet):
     queryset = permissions.objects.all()
     serializer_class = PermissionsSerializer
@@ -41,10 +34,11 @@ class PermissionViewSet(viewsets.ModelViewSet):
 
 @api_view(['POST'])
 def aprrovalList(request):
+    print(request)
     if request.method == 'POST':
         token_user = Token.objects.get(key=request.data['token']).user
         user_id = User.objects.get(username=token_user).id
-        card = cards.objects.get(user_uuid_id__id=user_id)
+        card = cards.objects.get(authusercard__user_uuid_id=user_id)
         # print()
         permissionlist = card.permission_uuid.order_by('-created_at')[1:]
         serializer = PermissionsSerializer(permissionlist, many=True)
@@ -114,7 +108,7 @@ def aprrovalRecent(request):
     if request.method == 'POST':
         token_user = Token.objects.get(key=request.data['token']).user
         user_id = User.objects.get(username=token_user).id
-        card = cards.objects.get(user_uuid_id__id=user_id)
+        card = cards.objects.get(authusercard__user_uuid_id=user_id)
         permissionrecent = card.permission_uuid.order_by('-created_at')[0:1]
         if permissionrecent.first().appoval_by == None:
             leadername = ''
@@ -261,4 +255,3 @@ def createUser(request):
 #         print(serializer)
 #         context = {'list': serializer_list.data, 'recent': serializer_recent.data}
 #         return Response(context)
->>>>>>> 46d1768ff0598756f664c4a0b6c67075df11f79b
